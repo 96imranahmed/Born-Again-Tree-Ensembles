@@ -6,6 +6,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+def load_htru_dataset(data_loc):
+    data = pd.read_csv(data_loc, 
+                       header = None)
+    columns = [
+        'mean_int_profile', 
+        'std_int_profile', 
+        'excess_kurtosis_int_profile', 
+        'skewness_int_profile',
+        'mean_dm_snr',
+        'std_dm_snr',
+        'excess_kurtosis_dm_snr', 
+        'skewness_dm_snr',
+        'target'
+    ]
+    data.columns = columns
+    return data
 
 def load_wpbc_dataset(data_loc):
     data = pd.read_csv(data_loc,
@@ -121,22 +137,24 @@ MAPPING_DICT = {
     'wpbc': load_wpbc_dataset,
     'wdbc': load_wdbc_dataset,
     'breast_cancer_wisconsin': load_wisconsin_bc_dataset,
-    'breast_cancer_yugoslavia': load_yugoslavia_bc_dataset
+    'breast_cancer_yugoslavia': load_yugoslavia_bc_dataset,
+    'htru': load_htru_dataset
 }
 
 def get_data(data_loc,
              dataset_name):
-    if dataset_name not in set(['wpbc', 'wdbc', 'breast_cancer_wisconsin', 'breast_cancer_yugoslavia']):
-        raise ValueError("Dataset '{}' not in recognised - select from '{}'".format(
+    if dataset_name not in set(MAPPING_DICT.keys()):
+        raise ValueError("Dataset '{}' not recognised - select from '{}'".format(
             dataset_name,
-            ['wpbc', 'wdbc', 'breast_cancer_wisconsin', 'breast_cancer_yugoslavia'])
+            MAPPING_DICT.keys())
         )
     data = MAPPING_DICT[dataset_name](data_loc)
     return data
 
-def get_model(data, print_plot = True):
+def get_model(data, print_plot = False):
     train_data, test_data = sklearn.model_selection.train_test_split(data, test_size = 0.2)
-    model =  sklearn.ensemble.RandomForestClassifier(n_estimators = 100, 
+    model =  sklearn.ensemble.RandomForestClassifier(n_estimators = 10, 
+                                                     max_depth=3,
                                                     max_features = len(data.columns) - 1).fit(train_data[train_data.columns.difference(['target'])], train_data['target'])
 
     test_predict = model.predict_proba(test_data[test_data.columns.difference(['target'])])[:, 1]

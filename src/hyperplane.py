@@ -1,7 +1,7 @@
 import sklearn.tree
 import sklearn.ensemble
 import sklearn.exceptions
-
+import numpy as np
 
 def __validate_input(model):
     if not (isinstance(model, sklearn.ensemble.RandomForestClassifier) or
@@ -14,7 +14,7 @@ def __validate_input(model):
         raise NotImplementedError("Multiple outputs not supported")
     return True
 
-def __extract_hyperplanes(model):   
+def extract_hyperplanes(model):   
     n_features = model.n_features_
     hyperplanes = [set()]*n_features
 
@@ -26,3 +26,6 @@ def __extract_hyperplanes(model):
                 continue
             hyperplanes[feature[i]].add(threshold[i])
     return [sorted(list(val)) for val in hyperplanes]
+
+def get_bounds(hyperplanes):
+    return np.ones([len(hyperplanes)], dtype = int), np.array([len(i) + 1 for i in hyperplanes], dtype = int)
