@@ -153,9 +153,9 @@ def get_data(data_loc,
 
 def get_model(data, print_plot = False):
     train_data, test_data = sklearn.model_selection.train_test_split(data, test_size = 0.2)
-    model =  sklearn.ensemble.RandomForestClassifier(n_estimators = 10, 
+    model =  sklearn.ensemble.RandomForestClassifier(n_estimators = 2, 
                                                      max_depth=3,
-                                                    max_features = len(data.columns) - 1).fit(train_data[train_data.columns.difference(['target'])], train_data['target'])
+                                                     max_features = len(data.columns) - 1).fit(train_data[train_data.columns.difference(['target'])], train_data['target'])
 
     test_predict = model.predict_proba(test_data[test_data.columns.difference(['target'])])[:, 1]
     fpr, tpr, _ = sklearn.metrics.roc_curve(test_data['target'], test_predict)
@@ -176,4 +176,4 @@ def get_model(data, print_plot = False):
 
     print('ROC score: {}'.format(roc_auc))
     print('Accuracy: {}'.format(sum((test_predict > 0.5) == test_data['target'])/len(test_predict)))
-    return model
+    return model, train_data, test_data

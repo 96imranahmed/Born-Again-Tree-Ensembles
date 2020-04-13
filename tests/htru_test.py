@@ -17,6 +17,6 @@ PROCESSED_DATASETS = {
     'htru': datasets.get_data("../data/htru/HTRU_2.csv", 'htru'),
 }
 
-model = datasets.get_model(PROCESSED_DATASETS['htru'])
+model, _, _ = datasets.get_model(PROCESSED_DATASETS['htru'])
 c_tree = BATDepth(model, log = True)
 c_tree.fit()
