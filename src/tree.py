@@ -5,7 +5,6 @@ class DecisionTree(object):
     d_tree_dict = None
 
     def __init__(self, dict_in, columns):
-        print(dict_in)
         self.d_tree_dict = dict_in
         self.columns = columns
 

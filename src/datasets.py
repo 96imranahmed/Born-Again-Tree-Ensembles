@@ -174,6 +174,6 @@ def get_model(data, print_plot = False):
         plt.legend(loc="lower right")
         plt.show()
 
-    print('ROC score: {}'.format(roc_auc))
-    print('Accuracy: {}'.format(sum((test_predict > 0.5) == test_data['target'])/len(test_predict)))
+    print('RF ROC score: {}'.format(roc_auc))
+    print('RF Accuracy: {}'.format(sum((test_predict > 0.5) == test_data['target'])/len(test_predict)))
     return model, train_data, test_data
