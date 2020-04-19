@@ -5,7 +5,7 @@ A reimplementation of Vidal et al.'s [paper](https://arxiv.org/pdf/2003.11132.pd
 
 ## Key takeaways
 - Implemented approach is **relatively inefficient** as coded, which currently makes the model impractical for general use. For example, it takes ~30 seconds to merge a forest with three trees on my computer. Plenty of opportunities to optimize the code.
-- There are a couple of minor typos in the algorithms specification in the original paper which I attempt to resolve below
+- There are a couple of minor typos in the algorithms in the original paper which I attempt to resolve below:
   * On page 5, in the algorithm, there is an `else` missing between `MEMORIZE((Zl, Zr), 0) return  0` and `MEMORIZE((Zl, Zr), 0) return  1`
   * On page 13, in `extract-optimal-solutions`, `EXPORT a split on feature j with level z_j^L` should be `EXPORT a split on feature j with level z_j^l`
 
@@ -32,13 +32,13 @@ BATDepth accuracy: 0.9784916201117319
 ```
 Equivalent accuracies between the BATDepth and RF models suggest that **decision trees have been perfectly reconstructed**.
 
-## Pending Todos
+## Todos
 
 PRs to address the below are welcomed :smile:
 
 - Add tree visualisation code **(in progress)**
 - Add tree pruning code as specified in the paper
-- Improve efficiecy of `BATDepth` algorithm (possibly re-implement in C++, to validate timings provided in the paper)
+- Improve efficiency of `BATDepth` algorithm (possibly re-implement in C++, to validate timings provided in the paper)
 - Add implementations for `DL` and `L` optimisation objectives
 - If reimplementation proves efficient for practical use, 'package-ify' this code
 

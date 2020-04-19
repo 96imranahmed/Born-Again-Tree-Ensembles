@@ -77,11 +77,10 @@ class BAT(ABC):
     # Re-create decision tree function
     def extract_optimal_solutions(self, z_left, z_right, phi_opt):
         if phi_opt == 0:
-            return ['leaf', self.evaluate_region(z_left)]
+            return ['leaf', int(self.evaluate_region(z_left).squeeze())]
         else:
             if self.log:
                 print('Extracting optimal solution for: ', z_left, z_right, phi_opt)
-            out_list = []
             for j in range(len(self.c_hyperplanes)):
                 for l_c in range(z_left[j], z_right[j]):
                     one_hot_j = np.zeros_like(z_left, dtype = int)
@@ -114,7 +113,7 @@ class BAT(ABC):
         return tree.DecisionTree(self.extract_optimal_solutions(z_bound_left, z_bound_right, phi_opt), self.columns)
 
     # Initialise class
-    def __init__(self, model_in, columns, log, epsilon=0.001):
+    def __init__(self, model_in, log, columns=None, epsilon=0.001):
         self.model = model_in
         self.columns = columns
         self.c_hyperplanes = hyperplane.extract_hyperplanes(model_in)
@@ -124,8 +123,8 @@ class BAT(ABC):
 
 class BATDepth(BAT):
 
-    def __init__(self, model, epsilon=0.001, log=False):
-        super().__init__(model, epsilon, log)
+    def __init__(self, model, epsilon=0.001, log=False, columns=None):
+        super().__init__(model_in = model, epsilon = epsilon, log = log, columns = columns)
 
     def calculate_objective(self, phi_one, phi_two):
         return max([phi_one, phi_two]) + 1
