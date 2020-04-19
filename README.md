@@ -1,7 +1,11 @@
 # Born-Again-Tree-Ensembles
 A reimplementation of Vidal et al.'s [paper](https://arxiv.org/pdf/2003.11132.pdf) on Born-Again Tree Ensembles. Currently implemented only for the `Depth` optimization objective, as outlined in the body of the main paper.
 
-(To be added: a fun tree picture to show this works)
+**Original RF Trees**  
+<img src="https://raw.githubusercontent.com/96imranahmed/Born-Again-Tree-Ensembles/master/tests/basic_test_estimators_readme.png" height="200"></img>
+
+**Equivalent BATDepth Trees**  
+<img src="https://raw.githubusercontent.com/96imranahmed/Born-Again-Tree-Ensembles/master/tests/basic_test_batdepth_readme.png " height="200"></img>
 
 ## Key takeaways
 - Implemented approach is **relatively inefficient** as coded, which currently makes the model impractical for general use. For example, it takes ~30 seconds to merge a forest with three trees on my computer. Plenty of opportunities to optimize the code.
@@ -21,7 +25,7 @@ output_decision_tree = c_tree.fit()
 test_predict = output_decision_tree.predict(test_data[test_data.columns.difference(['target'])].values)
 ``` 
 
-I have created a set of tests with various UCI datasets in the `tests` directory. `Basic_test.py` is a variant of the example detailed in the Appendix of the paper. `HTRU_test.py` is the same model as applied to the [HTRU2 dataset](http://archive.ics.uci.edu/ml/datasets/HTRU2).
+I have created a set of tests with various UCI datasets in the `tests` directory. `Basic_test.py` is a variant of the example detailed in the Appendix of the paper. `HTRU_test.py` is the same model as applied to the [HTRU2 dataset](http://archive.ics.uci.edu/ml/datasets/HTRU2). `breast_cancer.py` allows model testing on several UCI breast-cancer datasets, as detailed in `datasets.py`.
 
 Running `BATDepth` on an RF (>2 estimators) trained on HTRU2 gives the following output: 
 ```sh
@@ -36,7 +40,6 @@ Equivalent accuracies between the BATDepth and RF models suggest that **decision
 
 PRs to address the below are welcomed :smile:
 
-- Add tree visualisation code **(in progress)**
 - Add tree pruning code as specified in the paper
 - Improve efficiency of `BATDepth` algorithm (possibly re-implement in C++, to validate timings provided in the paper)
 - Add implementations for `DL` and `L` optimisation objectives

@@ -151,10 +151,10 @@ def get_data(data_loc,
     data = MAPPING_DICT[dataset_name](data_loc)
     return data
 
-def get_model(data, print_plot = False):
+def get_model(data, print_plot = False, n_estimators = 2, max_depth = 3):
     train_data, test_data = sklearn.model_selection.train_test_split(data, test_size = 0.2)
-    model =  sklearn.ensemble.RandomForestClassifier(n_estimators = 2, 
-                                                     max_depth=3,
+    model =  sklearn.ensemble.RandomForestClassifier(n_estimators = n_estimators, 
+                                                     max_depth= max_depth,
                                                      max_features = len(data.columns) - 1).fit(train_data[train_data.columns.difference(['target'])], train_data['target'])
 
     test_predict = model.predict_proba(test_data[test_data.columns.difference(['target'])])[:, 1]

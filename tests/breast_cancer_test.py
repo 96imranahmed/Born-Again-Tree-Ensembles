@@ -21,5 +21,7 @@ PROCESSED_DATASETS = {
 }
 
 model = datasets.get_model(PROCESSED_DATASETS['breast_cancer_wisconsin'])
-c_tree = BATDepth(model)
-c_tree.fit()
+c_tree = BATDepth(model, log = False)
+output_decision_tree = c_tree.fit()
+test_predict = output_decision_tree.predict(test_data[test_data.columns.difference(['target'])].values)
+print('BATDepth accuracy: {}'.format((test_predict == test_data['target']).sum()/len(test_predict)))
