@@ -39,9 +39,12 @@ Equivalent accuracies between the BATDepth and RF models suggest that **decision
 ## Todos
 
 PRs to address the below are welcomed :smile:
-
-- Add tree pruning code as specified in the paper
-- Improve efficiency of `BATDepth` algorithm (possibly re-implement in C++, to validate timings provided in the paper)
+- Improve efficiency of `BATDepth` algorithm - Options include:
+  - Pre-compute model evaluation calls on all regions before calling function
+  - Use a more efficient algorithm to find contiguous and discontiguous sub-regions (this takes the bulk of the time) 
+  - Re-implement in C++, to validate timings provided in the paper (the version on my PC runs orders of magnitude slower)
+  - Fine-tune/vectorize code where possible
+- Add tree pruning code as specified in the paper. Note: the code is 90% there (just need to implement a simple recursion), but improving algorithmic efficiency is more important!
 - Add implementations for `DL` and `L` optimisation objectives
 - If reimplementation proves efficient for practical use, 'package-ify' this code
 

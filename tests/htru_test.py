@@ -18,7 +18,7 @@ PROCESSED_DATASETS = {
     'htru': datasets.get_data("../data/htru/HTRU_2.csv", 'htru'),
 }
 
-model, train_data, test_data = datasets.get_model(PROCESSED_DATASETS['htru'], n_estimators = 3)
+model, train_data, test_data = datasets.get_model(PROCESSED_DATASETS['htru'], n_estimators = 2)
 c_tree = BATDepth(model, log = False)
 output_decision_tree = c_tree.fit()
 test_predict = output_decision_tree.predict(test_data[test_data.columns.difference(['target'])].values)
