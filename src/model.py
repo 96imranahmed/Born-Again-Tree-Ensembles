@@ -1,7 +1,7 @@
 import numpy as np
 from abc import ABC, abstractmethod
 import hyperplane
-
+import tree
 
 class RegionMemory():
     memory = {}
@@ -20,6 +20,8 @@ class RegionMemory():
 
     # Memory lookup
     def lookup(self, z_left, z_right):
+        if (z_left == z_right).all():
+            return 0
         lookup = self.__class__.hash(z_left, z_right)
         if lookup in self.memory:
             return self.memory[lookup]
@@ -80,33 +82,43 @@ class BAT(ABC):
         if phi_opt == 0:
             return ['leaf', self.evaluate_region(z_left)]
         else:
+            print('Started')
             out_list = []
             for j in range(len(self.c_hyperplanes)):
                 for l_c in range(z_left[j], z_right[j]):
                     one_hot_j = np.zeros_like(z_left, dtype = int)
                     one_hot_j[j] = 1
                     z_right_mid = z_right + one_hot_j * (l_c - z_right[j])
-                    z_left_mid = z_left + one_hot_j * (l_c + 1 - z_left[j])
                     phi_one = self.dp_memory.lookup(z_left, z_right_mid)
-                    if phi_one is None: continue
+                    if phi_one is None: 
+                        continue
+                    z_left_mid = z_left + one_hot_j * (l_c + 1 - z_left[j])
                     phi_two = self.dp_memory.lookup(z_left_mid, z_right)
-                    if phi_two is None: continue
+                    if phi_two is None: 
+                        continue
+                    print(phi_opt, '|' , z_left, phi_one, z_right_mid, ':', z_left_mid, phi_two, z_right_mid)
                     if phi_opt == self.calculate_objective(phi_one, phi_two):
+                        print('Valid')
+                        threshold = np.inf
+                        if l_c <= len(self.c_hyperplanes[j]):
+                            threshold = self.c_hyperplanes[j][l_c - 1]
                         return {
-                            'node': ['split', j, z_left[j]], 
+                            'node': ['split', j, threshold], 
                             'left_child': self.extract_optimal_solutions(z_left, z_right_mid, phi_one),
                             'right_child': self.extract_optimal_solutions(z_left_mid, z_right, phi_two)
                         }
+        print('Function failed for ',phi_opt, ':' , self.evaluate_region(z_left), z_left, '|', z_right,  self.evaluate_region(z_right))
 
     def fit(self):
-        z_bound_left, z_bound_right =hyperplane.get_bounds(self.c_hyperplanes)
+        z_bound_left, z_bound_right = hyperplane.get_bounds(self.c_hyperplanes)
         phi_opt = self.born_again(z_bound_left, z_bound_right)
-        self.base_tree = self.extract_optimal_solutions(z_bound_left, z_bound_right, phi_opt)
-        self.pruned_tree = None
+        print(self.dp_memory.memory)
+        return tree.DecisionTree(self.extract_optimal_solutions(z_bound_left, z_bound_right, phi_opt), self.columns)
 
     # Initialise class
-    def __init__(self, model_in, epsilon=0.001, log=False):
+    def __init__(self, model_in, columns, log, epsilon=0.001):
         self.model = model_in
+        self.columns = columns
         self.c_hyperplanes = hyperplane.extract_hyperplanes(model_in)
         self.epsilon = epsilon
         self.log = log
